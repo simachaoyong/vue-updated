@@ -1,28 +1,58 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="xl" :style="{'height':h+'px'}">{{name}}</div>
+    <div class="list" @touchstart="scrollStart($event)" @touchmove="scrollMove($event)" @touchend="scrollEnd($event)"></div>
   </div>
 </template>
-
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
-  name: 'app',
-  components: {
-    HelloWorld
-  }
+  data() {
+    return {
+      name:'加载中',
+      h:0,
+      scrollY:0,
+    }
+  },
+  methods: {
+    scrollStart(e){
+      this.scrollY=e.targetTouches[0].pageY
+    },
+    scrollMove(e){
+      // 移动的时候
+      if(window.scrollY==0){
+        this.h=e.targetTouches[0].pageY-this.scrollY
+        if(this.h>=100){
+          this.h=100;
+        }
+      }else{
+        return;
+      }
+    },
+    scrollEnd(e){
+      if(this.h<100){
+        this.h=0;
+      }else if(this.h==100){
+        setTimeout(()=>{
+          this.h=0;
+        },500)
+      }
+    }
+  },
 }
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style lang="scss" scoped>
+#app{
+  .xl{
+    background-color:blue;
+    text-align:center;
+    color:#fff;
+    overflow:hidden;
+  }
+  .list{
+    height:1000px;
+    background: #e4393c;
+  }
 }
 </style>
+
+
